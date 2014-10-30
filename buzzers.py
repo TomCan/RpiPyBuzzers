@@ -23,6 +23,7 @@
 
 import RPi.GPIO as GPIO
 import time
+import atexit
 
 # pin configuration
 pinButtons = [23,3,5,7,11,13,15,19,21]
@@ -32,6 +33,13 @@ pinBuzzer = 26
 # buzzer time
 sleepBuzzer = 0.5
 
+def atExit():
+    # set all output pins to 0
+    for pin in pinSignals:
+        GPIO.output(pin, 0)
+    # disable buzzer if defined
+    if pinBuzzer > 0:
+        GPIO.output(pinBuzzer, 0)
 
 def getStatus():
     s = 0
@@ -66,6 +74,7 @@ btnOutput = {
     '-': [22]
 }
 
+atexit.register(atExit)
 
 bMustReset = True
 
